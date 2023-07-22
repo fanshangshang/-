@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CurLectureMapper">
+    
+    <resultMap type="CurLecture" id="CurLectureResult">
+        <result property="lectureId"    column="lecture_id"    />
+        <result property="curriculumId"    column="curriculum_id"    />
+        <result property="order"    column="order"    />
+        <result property="name"    column="name"    />
+    </resultMap>
+
+    <sql id="selectCurLectureVo">
+        select lecture_id, curriculum_id, order, name from cur_lecture
+    </sql>
+
+    <select id="selectCurLectureList" parameterType="CurLecture" resultMap="CurLectureResult">
+        <include refid="selectCurLectureVo"/>
+        <where>  
+            <if test="curriculumId != null "> and curriculum_id = #{curriculumId}</if>
+            <if test="order != null "> and order = #{order}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectCurLectureByLectureId" parameterType="Long" resultMap="CurLectureResult">
+        <include refid="selectCurLectureVo"/>
+        where lecture_id = #{lectureId}
+    </select>
+        
+    <insert id="insertCurLecture" parameterType="CurLecture" useGeneratedKeys="true" keyProperty="lectureId">
+        insert into cur_lecture
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="curriculumId != null">curriculum_id,</if>
+            <if test="order != null">order,</if>
+            <if test="name != null">name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="curriculumId != null">#{curriculumId},</if>
+            <if test="order != null">#{order},</if>
+            <if test="name != null">#{name},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCurLecture" parameterType="CurLecture">
+        update cur_lecture
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="curriculumId != null">curriculum_id = #{curriculumId},</if>
+            <if test="order != null">order = #{order},</if>
+            <if test="name != null">name = #{name},</if>
+        </trim>
+        where lecture_id = #{lectureId}
+    </update>
+
+    <delete id="deleteCurLectureByLectureId" parameterType="Long">
+        delete from cur_lecture where lecture_id = #{lectureId}
+    </delete>
+
+    <delete id="deleteCurLectureByLectureIds" parameterType="String">
+        delete from cur_lecture where lecture_id in 
+        <foreach item="lectureId" collection="array" open="(" separator="," close=")">
+            #{lectureId}
+        </foreach>
+    </delete>
+</mapper>

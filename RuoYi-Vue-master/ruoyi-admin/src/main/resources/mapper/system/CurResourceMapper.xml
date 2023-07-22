@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CurResourceMapper">
+    
+    <resultMap type="CurResource" id="CurResourceResult">
+        <result property="resourceId"    column="resource_id"    />
+        <result property="lectureId"    column="lecture_id"    />
+        <result property="type"    column="type"    />
+        <result property="name"    column="name"    />
+        <result property="downloadable"    column="downloadable"    />
+        <result property="readable"    column="readable"    />
+        <result property="lectured"    column="lectured"    />
+        <result property="attachment"    column="attachment"    />
+    </resultMap>
+
+    <sql id="selectCurResourceVo">
+        select resource_id, lecture_id, type, name, downloadable, readable, lectured, attachment from cur_resource
+    </sql>
+
+    <select id="selectCurResourceList" parameterType="CurResource" resultMap="CurResourceResult">
+        <include refid="selectCurResourceVo"/>
+        <where>  
+            <if test="lectureId != null "> and lecture_id = #{lectureId}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="downloadable != null  and downloadable != ''"> and downloadable = #{downloadable}</if>
+            <if test="readable != null  and readable != ''"> and readable = #{readable}</if>
+            <if test="lectured != null  and lectured != ''"> and lectured = #{lectured}</if>
+            <if test="attachment != null  and attachment != ''"> and attachment = #{attachment}</if>
+        </where>
+    </select>
+    
+    <select id="selectCurResourceByResourceId" parameterType="Long" resultMap="CurResourceResult">
+        <include refid="selectCurResourceVo"/>
+        where resource_id = #{resourceId}
+    </select>
+        
+    <insert id="insertCurResource" parameterType="CurResource" useGeneratedKeys="true" keyProperty="resourceId">
+        insert into cur_resource
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="lectureId != null">lecture_id,</if>
+            <if test="type != null and type != ''">type,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="downloadable != null and downloadable != ''">downloadable,</if>
+            <if test="readable != null and readable != ''">readable,</if>
+            <if test="lectured != null and lectured != ''">lectured,</if>
+            <if test="attachment != null">attachment,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="lectureId != null">#{lectureId},</if>
+            <if test="type != null and type != ''">#{type},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="downloadable != null and downloadable != ''">#{downloadable},</if>
+            <if test="readable != null and readable != ''">#{readable},</if>
+            <if test="lectured != null and lectured != ''">#{lectured},</if>
+            <if test="attachment != null">#{attachment},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCurResource" parameterType="CurResource">
+        update cur_resource
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="lectureId != null">lecture_id = #{lectureId},</if>
+            <if test="type != null and type != ''">type = #{type},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="downloadable != null and downloadable != ''">downloadable = #{downloadable},</if>
+            <if test="readable != null and readable != ''">readable = #{readable},</if>
+            <if test="lectured != null and lectured != ''">lectured = #{lectured},</if>
+            <if test="attachment != null">attachment = #{attachment},</if>
+        </trim>
+        where resource_id = #{resourceId}
+    </update>
+
+    <delete id="deleteCurResourceByResourceId" parameterType="Long">
+        delete from cur_resource where resource_id = #{resourceId}
+    </delete>
+
+    <delete id="deleteCurResourceByResourceIds" parameterType="String">
+        delete from cur_resource where resource_id in 
+        <foreach item="resourceId" collection="array" open="(" separator="," close=")">
+            #{resourceId}
+        </foreach>
+    </delete>
+</mapper>

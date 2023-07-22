@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BasClassMapper">
+    
+    <resultMap type="BasClass" id="BasClassResult">
+        <result property="classId"    column="class_id"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="adviserId"    column="adviser_id"    />
+        <result property="name"    column="name"    />
+        <result property="grade"    column="grade"    />
+        <result property="major"    column="major"    />
+        <result property="number"    column="number"    />
+    </resultMap>
+
+    <sql id="selectBasClassVo">
+        select class_id, dept_id, adviser_id, name, grade, major, number from bas_class
+    </sql>
+
+    <select id="selectBasClassList" parameterType="BasClass" resultMap="BasClassResult">
+        <include refid="selectBasClassVo"/>
+        <where>  
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+            <if test="adviserId != null "> and adviser_id = #{adviserId}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="grade != null  and grade != ''"> and grade = #{grade}</if>
+            <if test="major != null  and major != ''"> and major = #{major}</if>
+            <if test="number != null "> and number = #{number}</if>
+        </where>
+    </select>
+    
+    <select id="selectBasClassByClassId" parameterType="Long" resultMap="BasClassResult">
+        <include refid="selectBasClassVo"/>
+        where class_id = #{classId}
+    </select>
+        
+    <insert id="insertBasClass" parameterType="BasClass" useGeneratedKeys="true" keyProperty="classId">
+        insert into bas_class
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deptId != null">dept_id,</if>
+            <if test="adviserId != null">adviser_id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="grade != null and grade != ''">grade,</if>
+            <if test="major != null and major != ''">major,</if>
+            <if test="number != null">number,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deptId != null">#{deptId},</if>
+            <if test="adviserId != null">#{adviserId},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="grade != null and grade != ''">#{grade},</if>
+            <if test="major != null and major != ''">#{major},</if>
+            <if test="number != null">#{number},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBasClass" parameterType="BasClass">
+        update bas_class
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="adviserId != null">adviser_id = #{adviserId},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="grade != null and grade != ''">grade = #{grade},</if>
+            <if test="major != null and major != ''">major = #{major},</if>
+            <if test="number != null">number = #{number},</if>
+        </trim>
+        where class_id = #{classId}
+    </update>
+
+    <delete id="deleteBasClassByClassId" parameterType="Long">
+        delete from bas_class where class_id = #{classId}
+    </delete>
+
+    <delete id="deleteBasClassByClassIds" parameterType="String">
+        delete from bas_class where class_id in 
+        <foreach item="classId" collection="array" open="(" separator="," close=")">
+            #{classId}
+        </foreach>
+    </delete>
+</mapper>

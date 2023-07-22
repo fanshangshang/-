@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CouLessonMapper">
+    
+    <resultMap type="CouLesson" id="CouLessonResult">
+        <result property="lessonId"    column="lesson_id"    />
+        <result property="courseId"    column="course_id"    />
+        <result property="lectureId"    column="lecture_id"    />
+        <result property="date"    column="date"    />
+        <result property="section"    column="section"    />
+        <result property="weekNumber"    column="week_number"    />
+        <result property="weekDay"    column="week_day"    />
+        <result property="location"    column="location"    />
+        <result property="type"    column="type"    />
+    </resultMap>
+
+    <sql id="selectCouLessonVo">
+        select lesson_id, course_id, lecture_id, date, section, week_number, week_day, location, type from cou_lesson
+    </sql>
+
+    <select id="selectCouLessonList" parameterType="CouLesson" resultMap="CouLessonResult">
+        <include refid="selectCouLessonVo"/>
+        <where>  
+            <if test="courseId != null "> and course_id = #{courseId}</if>
+            <if test="lectureId != null "> and lecture_id = #{lectureId}</if>
+            <if test="date != null "> and date = #{date}</if>
+            <if test="section != null  and section != ''"> and section = #{section}</if>
+            <if test="weekNumber != null "> and week_number = #{weekNumber}</if>
+            <if test="weekDay != null  and weekDay != ''"> and week_day = #{weekDay}</if>
+            <if test="location != null  and location != ''"> and location = #{location}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+        </where>
+    </select>
+    
+    <select id="selectCouLessonByLessonId" parameterType="Long" resultMap="CouLessonResult">
+        <include refid="selectCouLessonVo"/>
+        where lesson_id = #{lessonId}
+    </select>
+        
+    <insert id="insertCouLesson" parameterType="CouLesson" useGeneratedKeys="true" keyProperty="lessonId">
+        insert into cou_lesson
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="courseId != null">course_id,</if>
+            <if test="lectureId != null">lecture_id,</if>
+            <if test="date != null">date,</if>
+            <if test="section != null and section != ''">section,</if>
+            <if test="weekNumber != null">week_number,</if>
+            <if test="weekDay != null and weekDay != ''">week_day,</if>
+            <if test="location != null">location,</if>
+            <if test="type != null">type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="courseId != null">#{courseId},</if>
+            <if test="lectureId != null">#{lectureId},</if>
+            <if test="date != null">#{date},</if>
+            <if test="section != null and section != ''">#{section},</if>
+            <if test="weekNumber != null">#{weekNumber},</if>
+            <if test="weekDay != null and weekDay != ''">#{weekDay},</if>
+            <if test="location != null">#{location},</if>
+            <if test="type != null">#{type},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCouLesson" parameterType="CouLesson">
+        update cou_lesson
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="courseId != null">course_id = #{courseId},</if>
+            <if test="lectureId != null">lecture_id = #{lectureId},</if>
+            <if test="date != null">date = #{date},</if>
+            <if test="section != null and section != ''">section = #{section},</if>
+            <if test="weekNumber != null">week_number = #{weekNumber},</if>
+            <if test="weekDay != null and weekDay != ''">week_day = #{weekDay},</if>
+            <if test="location != null">location = #{location},</if>
+            <if test="type != null">type = #{type},</if>
+        </trim>
+        where lesson_id = #{lessonId}
+    </update>
+
+    <delete id="deleteCouLessonByLessonId" parameterType="Long">
+        delete from cou_lesson where lesson_id = #{lessonId}
+    </delete>
+
+    <delete id="deleteCouLessonByLessonIds" parameterType="String">
+        delete from cou_lesson where lesson_id in 
+        <foreach item="lessonId" collection="array" open="(" separator="," close=")">
+            #{lessonId}
+        </foreach>
+    </delete>
+</mapper>

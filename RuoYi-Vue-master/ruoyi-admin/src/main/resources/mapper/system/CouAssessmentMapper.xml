@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CouAssessmentMapper">
+    
+    <resultMap type="CouAssessment" id="CouAssessmentResult">
+        <result property="assessmentId"    column="assessment_id"    />
+        <result property="enrollId"    column="enroll_id"    />
+        <result property="taskId"    column="task_id"    />
+        <result property="type"    column="type"    />
+        <result property="result"    column="result"    />
+        <result property="latitude"    column="latitude"    />
+        <result property="longitude"    column="longitude"    />
+        <result property="mark"    column="mark"    />
+        <result property="attachment"    column="attachment"    />
+    </resultMap>
+
+    <sql id="selectCouAssessmentVo">
+        select assessment_id, enroll_id, task_id, type, result, latitude, longitude, mark, attachment from cou_assessment
+    </sql>
+
+    <select id="selectCouAssessmentList" parameterType="CouAssessment" resultMap="CouAssessmentResult">
+        <include refid="selectCouAssessmentVo"/>
+        <where>  
+            <if test="enrollId != null "> and enroll_id = #{enrollId}</if>
+            <if test="taskId != null "> and task_id = #{taskId}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="result != null "> and result = #{result}</if>
+            <if test="latitude != null "> and latitude = #{latitude}</if>
+            <if test="longitude != null "> and longitude = #{longitude}</if>
+            <if test="mark != null  and mark != ''"> and mark = #{mark}</if>
+            <if test="attachment != null  and attachment != ''"> and attachment = #{attachment}</if>
+        </where>
+    </select>
+    
+    <select id="selectCouAssessmentByAssessmentId" parameterType="Long" resultMap="CouAssessmentResult">
+        <include refid="selectCouAssessmentVo"/>
+        where assessment_id = #{assessmentId}
+    </select>
+        
+    <insert id="insertCouAssessment" parameterType="CouAssessment" useGeneratedKeys="true" keyProperty="assessmentId">
+        insert into cou_assessment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="enrollId != null">enroll_id,</if>
+            <if test="taskId != null">task_id,</if>
+            <if test="type != null and type != ''">type,</if>
+            <if test="result != null">result,</if>
+            <if test="latitude != null">latitude,</if>
+            <if test="longitude != null">longitude,</if>
+            <if test="mark != null">mark,</if>
+            <if test="attachment != null">attachment,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="enrollId != null">#{enrollId},</if>
+            <if test="taskId != null">#{taskId},</if>
+            <if test="type != null and type != ''">#{type},</if>
+            <if test="result != null">#{result},</if>
+            <if test="latitude != null">#{latitude},</if>
+            <if test="longitude != null">#{longitude},</if>
+            <if test="mark != null">#{mark},</if>
+            <if test="attachment != null">#{attachment},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCouAssessment" parameterType="CouAssessment">
+        update cou_assessment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="enrollId != null">enroll_id = #{enrollId},</if>
+            <if test="taskId != null">task_id = #{taskId},</if>
+            <if test="type != null and type != ''">type = #{type},</if>
+            <if test="result != null">result = #{result},</if>
+            <if test="latitude != null">latitude = #{latitude},</if>
+            <if test="longitude != null">longitude = #{longitude},</if>
+            <if test="mark != null">mark = #{mark},</if>
+            <if test="attachment != null">attachment = #{attachment},</if>
+        </trim>
+        where assessment_id = #{assessmentId}
+    </update>
+
+    <delete id="deleteCouAssessmentByAssessmentId" parameterType="Long">
+        delete from cou_assessment where assessment_id = #{assessmentId}
+    </delete>
+
+    <delete id="deleteCouAssessmentByAssessmentIds" parameterType="String">
+        delete from cou_assessment where assessment_id in 
+        <foreach item="assessmentId" collection="array" open="(" separator="," close=")">
+            #{assessmentId}
+        </foreach>
+    </delete>
+</mapper>

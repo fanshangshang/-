@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CouEnrollMapper">
+    
+    <resultMap type="CouEnroll" id="CouEnrollResult">
+        <result property="enrollId"    column="enroll_id"    />
+        <result property="courseId"    column="course_id"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="usualScore"    column="usual_score"    />
+        <result property="midScore"    column="mid_score"    />
+        <result property="finalScore"    column="final_score"    />
+        <result property="otherScore"    column="other_score"    />
+        <result property="totalScore"    column="total_score"    />
+    </resultMap>
+
+    <sql id="selectCouEnrollVo">
+        select enroll_id, course_id, student_id, usual_score, mid_score, final_score, other_score, total_score from cou_enroll
+    </sql>
+
+    <select id="selectCouEnrollList" parameterType="CouEnroll" resultMap="CouEnrollResult">
+        <include refid="selectCouEnrollVo"/>
+        <where>  
+            <if test="courseId != null "> and course_id = #{courseId}</if>
+            <if test="studentId != null "> and student_id = #{studentId}</if>
+            <if test="usualScore != null "> and usual_score = #{usualScore}</if>
+            <if test="midScore != null "> and mid_score = #{midScore}</if>
+            <if test="finalScore != null "> and final_score = #{finalScore}</if>
+            <if test="otherScore != null "> and other_score = #{otherScore}</if>
+            <if test="totalScore != null "> and total_score = #{totalScore}</if>
+        </where>
+    </select>
+    
+    <select id="selectCouEnrollByEnrollId" parameterType="Long" resultMap="CouEnrollResult">
+        <include refid="selectCouEnrollVo"/>
+        where enroll_id = #{enrollId}
+    </select>
+        
+    <insert id="insertCouEnroll" parameterType="CouEnroll" useGeneratedKeys="true" keyProperty="enrollId">
+        insert into cou_enroll
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="courseId != null">course_id,</if>
+            <if test="studentId != null">student_id,</if>
+            <if test="usualScore != null">usual_score,</if>
+            <if test="midScore != null">mid_score,</if>
+            <if test="finalScore != null">final_score,</if>
+            <if test="otherScore != null">other_score,</if>
+            <if test="totalScore != null">total_score,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="courseId != null">#{courseId},</if>
+            <if test="studentId != null">#{studentId},</if>
+            <if test="usualScore != null">#{usualScore},</if>
+            <if test="midScore != null">#{midScore},</if>
+            <if test="finalScore != null">#{finalScore},</if>
+            <if test="otherScore != null">#{otherScore},</if>
+            <if test="totalScore != null">#{totalScore},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCouEnroll" parameterType="CouEnroll">
+        update cou_enroll
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="courseId != null">course_id = #{courseId},</if>
+            <if test="studentId != null">student_id = #{studentId},</if>
+            <if test="usualScore != null">usual_score = #{usualScore},</if>
+            <if test="midScore != null">mid_score = #{midScore},</if>
+            <if test="finalScore != null">final_score = #{finalScore},</if>
+            <if test="otherScore != null">other_score = #{otherScore},</if>
+            <if test="totalScore != null">total_score = #{totalScore},</if>
+        </trim>
+        where enroll_id = #{enrollId}
+    </update>
+
+    <delete id="deleteCouEnrollByEnrollId" parameterType="Long">
+        delete from cou_enroll where enroll_id = #{enrollId}
+    </delete>
+
+    <delete id="deleteCouEnrollByEnrollIds" parameterType="String">
+        delete from cou_enroll where enroll_id in 
+        <foreach item="enrollId" collection="array" open="(" separator="," close=")">
+            #{enrollId}
+        </foreach>
+    </delete>
+</mapper>

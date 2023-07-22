@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CouMessageMapper">
+    
+    <resultMap type="CouMessage" id="CouMessageResult">
+        <result property="messageId"    column="message_id"    />
+        <result property="assessmentId"    column="assessment_id"    />
+        <result property="parentMessageId"    column="parent_message_id"    />
+        <result property="content"    column="content"    />
+        <result property="title"    column="title"    />
+        <result property="attachment"    column="attachment"    />
+    </resultMap>
+
+    <sql id="selectCouMessageVo">
+        select message_id, assessment_id, parent_message_id, content, title, attachment from cou_message
+    </sql>
+
+    <select id="selectCouMessageList" parameterType="CouMessage" resultMap="CouMessageResult">
+        <include refid="selectCouMessageVo"/>
+        <where>  
+            <if test="assessmentId != null "> and assessment_id = #{assessmentId}</if>
+            <if test="parentMessageId != null "> and parent_message_id = #{parentMessageId}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="attachment != null  and attachment != ''"> and attachment = #{attachment}</if>
+        </where>
+    </select>
+    
+    <select id="selectCouMessageByMessageId" parameterType="Long" resultMap="CouMessageResult">
+        <include refid="selectCouMessageVo"/>
+        where message_id = #{messageId}
+    </select>
+        
+    <insert id="insertCouMessage" parameterType="CouMessage" useGeneratedKeys="true" keyProperty="messageId">
+        insert into cou_message
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="assessmentId != null">assessment_id,</if>
+            <if test="parentMessageId != null">parent_message_id,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="attachment != null">attachment,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="assessmentId != null">#{assessmentId},</if>
+            <if test="parentMessageId != null">#{parentMessageId},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="attachment != null">#{attachment},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCouMessage" parameterType="CouMessage">
+        update cou_message
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="assessmentId != null">assessment_id = #{assessmentId},</if>
+            <if test="parentMessageId != null">parent_message_id = #{parentMessageId},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="attachment != null">attachment = #{attachment},</if>
+        </trim>
+        where message_id = #{messageId}
+    </update>
+
+    <delete id="deleteCouMessageByMessageId" parameterType="Long">
+        delete from cou_message where message_id = #{messageId}
+    </delete>
+
+    <delete id="deleteCouMessageByMessageIds" parameterType="String">
+        delete from cou_message where message_id in 
+        <foreach item="messageId" collection="array" open="(" separator="," close=")">
+            #{messageId}
+        </foreach>
+    </delete>
+</mapper>

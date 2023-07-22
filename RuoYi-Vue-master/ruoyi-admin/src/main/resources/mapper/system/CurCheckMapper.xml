@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CurCheckMapper">
+    
+    <resultMap type="CurCheck" id="CurCheckResult">
+        <result property="taskId"    column="task_id"    />
+        <result property="exerciseId"    column="exercise_id"    />
+        <result property="checkId"    column="check_id"    />
+    </resultMap>
+
+    <sql id="selectCurCheckVo">
+        select task_id, exercise_id, check_id from cur_check
+    </sql>
+
+    <select id="selectCurCheckList" parameterType="CurCheck" resultMap="CurCheckResult">
+        <include refid="selectCurCheckVo"/>
+        <where>  
+            <if test="taskId != null "> and task_id = #{taskId}</if>
+            <if test="exerciseId != null "> and exercise_id = #{exerciseId}</if>
+        </where>
+    </select>
+    
+    <select id="selectCurCheckByCheckId" parameterType="Long" resultMap="CurCheckResult">
+        <include refid="selectCurCheckVo"/>
+        where check_id = #{checkId}
+    </select>
+        
+    <insert id="insertCurCheck" parameterType="CurCheck" useGeneratedKeys="true" keyProperty="checkId">
+        insert into cur_check
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="taskId != null">task_id,</if>
+            <if test="exerciseId != null">exercise_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="taskId != null">#{taskId},</if>
+            <if test="exerciseId != null">#{exerciseId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCurCheck" parameterType="CurCheck">
+        update cur_check
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="taskId != null">task_id = #{taskId},</if>
+            <if test="exerciseId != null">exercise_id = #{exerciseId},</if>
+        </trim>
+        where check_id = #{checkId}
+    </update>
+
+    <delete id="deleteCurCheckByCheckId" parameterType="Long">
+        delete from cur_check where check_id = #{checkId}
+    </delete>
+
+    <delete id="deleteCurCheckByCheckIds" parameterType="String">
+        delete from cur_check where check_id in 
+        <foreach item="checkId" collection="array" open="(" separator="," close=")">
+            #{checkId}
+        </foreach>
+    </delete>
+</mapper>

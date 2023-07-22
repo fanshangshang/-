@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CurCurriculumMapper">
+    
+    <resultMap type="CurCurriculum" id="CurCurriculumResult">
+        <result property="curriculumId"    column="curriculum_id"    />
+        <result property="code"    column="code"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="name"    column="name"    />
+        <result property="credit"    column="credit"    />
+        <result property="theoryHours"    column="theory_hours"    />
+        <result property="type"    column="type"    />
+        <result property="nature"    column="nature"    />
+        <result property="laboratoryHours"    column="laboratory_hours"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectCurCurriculumVo">
+        select curriculum_id, code, dept_id, name, credit, theory_hours, type, nature, laboratory_hours, create_time, create_by, update_by, update_time from cur_curriculum
+    </sql>
+
+    <select id="selectCurCurriculumList" parameterType="CurCurriculum" resultMap="CurCurriculumResult">
+        <include refid="selectCurCurriculumVo"/>
+        <where>  
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="credit != null "> and credit = #{credit}</if>
+            <if test="theoryHours != null "> and theory_hours = #{theoryHours}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="nature != null  and nature != ''"> and nature = #{nature}</if>
+            <if test="laboratoryHours != null "> and laboratory_hours = #{laboratoryHours}</if>
+        </where>
+    </select>
+    
+    <select id="selectCurCurriculumByCurriculumId" parameterType="Long" resultMap="CurCurriculumResult">
+        <include refid="selectCurCurriculumVo"/>
+        where curriculum_id = #{curriculumId}
+    </select>
+        
+    <insert id="insertCurCurriculum" parameterType="CurCurriculum" useGeneratedKeys="true" keyProperty="curriculumId">
+        insert into cur_curriculum
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="code != null and code != ''">code,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="credit != null">credit,</if>
+            <if test="theoryHours != null">theory_hours,</if>
+            <if test="type != null and type != ''">type,</if>
+            <if test="nature != null and nature != ''">nature,</if>
+            <if test="laboratoryHours != null">laboratory_hours,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="code != null and code != ''">#{code},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="credit != null">#{credit},</if>
+            <if test="theoryHours != null">#{theoryHours},</if>
+            <if test="type != null and type != ''">#{type},</if>
+            <if test="nature != null and nature != ''">#{nature},</if>
+            <if test="laboratoryHours != null">#{laboratoryHours},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCurCurriculum" parameterType="CurCurriculum">
+        update cur_curriculum
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="code != null and code != ''">code = #{code},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="credit != null">credit = #{credit},</if>
+            <if test="theoryHours != null">theory_hours = #{theoryHours},</if>
+            <if test="type != null and type != ''">type = #{type},</if>
+            <if test="nature != null and nature != ''">nature = #{nature},</if>
+            <if test="laboratoryHours != null">laboratory_hours = #{laboratoryHours},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where curriculum_id = #{curriculumId}
+    </update>
+
+    <delete id="deleteCurCurriculumByCurriculumId" parameterType="Long">
+        delete from cur_curriculum where curriculum_id = #{curriculumId}
+    </delete>
+
+    <delete id="deleteCurCurriculumByCurriculumIds" parameterType="String">
+        delete from cur_curriculum where curriculum_id in 
+        <foreach item="curriculumId" collection="array" open="(" separator="," close=")">
+            #{curriculumId}
+        </foreach>
+    </delete>
+</mapper>

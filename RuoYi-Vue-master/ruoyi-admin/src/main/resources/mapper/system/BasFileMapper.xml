@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BasFileMapper">
+    
+    <resultMap type="BasFile" id="BasFileResult">
+        <result property="fileId"    column="file_id"    />
+        <result property="resourceId"    column="resource_id"    />
+        <result property="exerciseId"    column="exercise_id"    />
+        <result property="messageId"    column="message_id"    />
+        <result property="name"    column="name"    />
+        <result property="path"    column="path"    />
+        <result property="type"    column="type"    />
+    </resultMap>
+
+    <sql id="selectBasFileVo">
+        select file_id, resource_id, exercise_id, message_id, name, path, type from bas_file
+    </sql>
+
+    <select id="selectBasFileList" parameterType="BasFile" resultMap="BasFileResult">
+        <include refid="selectBasFileVo"/>
+        <where>  
+            <if test="resourceId != null "> and resource_id = #{resourceId}</if>
+            <if test="exerciseId != null "> and exercise_id = #{exerciseId}</if>
+            <if test="messageId != null "> and message_id = #{messageId}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="path != null  and path != ''"> and path = #{path}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+        </where>
+    </select>
+    
+    <select id="selectBasFileByFileId" parameterType="Long" resultMap="BasFileResult">
+        <include refid="selectBasFileVo"/>
+        where file_id = #{fileId}
+    </select>
+        
+    <insert id="insertBasFile" parameterType="BasFile" useGeneratedKeys="true" keyProperty="fileId">
+        insert into bas_file
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="resourceId != null">resource_id,</if>
+            <if test="exerciseId != null">exercise_id,</if>
+            <if test="messageId != null">message_id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="path != null and path != ''">path,</if>
+            <if test="type != null">type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="resourceId != null">#{resourceId},</if>
+            <if test="exerciseId != null">#{exerciseId},</if>
+            <if test="messageId != null">#{messageId},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="path != null and path != ''">#{path},</if>
+            <if test="type != null">#{type},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBasFile" parameterType="BasFile">
+        update bas_file
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="resourceId != null">resource_id = #{resourceId},</if>
+            <if test="exerciseId != null">exercise_id = #{exerciseId},</if>
+            <if test="messageId != null">message_id = #{messageId},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="path != null and path != ''">path = #{path},</if>
+            <if test="type != null">type = #{type},</if>
+        </trim>
+        where file_id = #{fileId}
+    </update>
+
+    <delete id="deleteBasFileByFileId" parameterType="Long">
+        delete from bas_file where file_id = #{fileId}
+    </delete>
+
+    <delete id="deleteBasFileByFileIds" parameterType="String">
+        delete from bas_file where file_id in 
+        <foreach item="fileId" collection="array" open="(" separator="," close=")">
+            #{fileId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CurTaskMapper">
+    
+    <resultMap type="CurTask" id="CurTaskResult">
+        <result property="taskId"    column="task_id"    />
+        <result property="lectureId"    column="lecture_id"    />
+        <result property="name"    column="name"    />
+        <result property="type"    column="type"    />
+        <result property="deadline"    column="deadline"    />
+        <result property="open"    column="open"    />
+        <result property="requirement"    column="requirement"    />
+        <result property="submitFormat"    column="submit_format"    />
+        <result property="submitType"    column="submit_type"    />
+    </resultMap>
+
+    <sql id="selectCurTaskVo">
+        select task_id, lecture_id, name, type, deadline, open, requirement, submit_format, submit_type from cur_task
+    </sql>
+
+    <select id="selectCurTaskList" parameterType="CurTask" resultMap="CurTaskResult">
+        <include refid="selectCurTaskVo"/>
+        <where>  
+            <if test="lectureId != null "> and lecture_id = #{lectureId}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="deadline != null "> and deadline = #{deadline}</if>
+            <if test="open != null  and open != ''"> and open = #{open}</if>
+            <if test="requirement != null  and requirement != ''"> and requirement = #{requirement}</if>
+            <if test="submitFormat != null  and submitFormat != ''"> and submit_format = #{submitFormat}</if>
+            <if test="submitType != null  and submitType != ''"> and submit_type = #{submitType}</if>
+        </where>
+    </select>
+    
+    <select id="selectCurTaskByTaskId" parameterType="Long" resultMap="CurTaskResult">
+        <include refid="selectCurTaskVo"/>
+        where task_id = #{taskId}
+    </select>
+        
+    <insert id="insertCurTask" parameterType="CurTask" useGeneratedKeys="true" keyProperty="taskId">
+        insert into cur_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="lectureId != null">lecture_id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="type != null and type != ''">type,</if>
+            <if test="deadline != null">deadline,</if>
+            <if test="open != null">open,</if>
+            <if test="requirement != null">requirement,</if>
+            <if test="submitFormat != null and submitFormat != ''">submit_format,</if>
+            <if test="submitType != null and submitType != ''">submit_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="lectureId != null">#{lectureId},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="type != null and type != ''">#{type},</if>
+            <if test="deadline != null">#{deadline},</if>
+            <if test="open != null">#{open},</if>
+            <if test="requirement != null">#{requirement},</if>
+            <if test="submitFormat != null and submitFormat != ''">#{submitFormat},</if>
+            <if test="submitType != null and submitType != ''">#{submitType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCurTask" parameterType="CurTask">
+        update cur_task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="lectureId != null">lecture_id = #{lectureId},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="type != null and type != ''">type = #{type},</if>
+            <if test="deadline != null">deadline = #{deadline},</if>
+            <if test="open != null">open = #{open},</if>
+            <if test="requirement != null">requirement = #{requirement},</if>
+            <if test="submitFormat != null and submitFormat != ''">submit_format = #{submitFormat},</if>
+            <if test="submitType != null and submitType != ''">submit_type = #{submitType},</if>
+        </trim>
+        where task_id = #{taskId}
+    </update>
+
+    <delete id="deleteCurTaskByTaskId" parameterType="Long">
+        delete from cur_task where task_id = #{taskId}
+    </delete>
+
+    <delete id="deleteCurTaskByTaskIds" parameterType="String">
+        delete from cur_task where task_id in 
+        <foreach item="taskId" collection="array" open="(" separator="," close=")">
+            #{taskId}
+        </foreach>
+    </delete>
+</mapper>

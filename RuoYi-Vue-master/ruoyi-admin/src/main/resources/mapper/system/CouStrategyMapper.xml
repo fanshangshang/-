@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CouStrategyMapper">
+    
+    <resultMap type="CouStrategy" id="CouStrategyResult">
+        <result property="strategyId"    column="strategy_id"    />
+        <result property="name"    column="name"    />
+        <result property="usualPercent"    column="usual_percent"    />
+        <result property="midPercent"    column="mid_percent"    />
+        <result property="finalPercent"    column="final_percent"    />
+        <result property="otherPercent"    column="other_percent"    />
+        <result property="excellectPlus"    column="excellect_plus"    />
+        <result property="excellent"    column="excellent"    />
+        <result property="excellentMinus"    column="excellent_minus"    />
+        <result property="goodPlus"    column="good_plus"    />
+        <result property="good"    column="good"    />
+        <result property="goodMinus"    column="good_minus"    />
+        <result property="passPlus"    column="pass_plus"    />
+        <result property="pass"    column="pass"    />
+        <result property="passMinus"    column="pass_minus"    />
+        <result property="failedPlus"    column="failed_plus"    />
+        <result property="failed"    column="failed"    />
+        <result property="failedMinus"    column="failed_minus"    />
+    </resultMap>
+
+    <sql id="selectCouStrategyVo">
+        select strategy_id, name, usual_percent, mid_percent, final_percent, other_percent, excellect_plus, excellent, excellent_minus, good_plus, good, good_minus, pass_plus, pass, pass_minus, failed_plus, failed, failed_minus from cou_strategy
+    </sql>
+
+    <select id="selectCouStrategyList" parameterType="CouStrategy" resultMap="CouStrategyResult">
+        <include refid="selectCouStrategyVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="usualPercent != null "> and usual_percent = #{usualPercent}</if>
+            <if test="midPercent != null "> and mid_percent = #{midPercent}</if>
+            <if test="finalPercent != null "> and final_percent = #{finalPercent}</if>
+            <if test="otherPercent != null "> and other_percent = #{otherPercent}</if>
+            <if test="excellectPlus != null "> and excellect_plus = #{excellectPlus}</if>
+            <if test="excellent != null "> and excellent = #{excellent}</if>
+            <if test="excellentMinus != null "> and excellent_minus = #{excellentMinus}</if>
+            <if test="goodPlus != null "> and good_plus = #{goodPlus}</if>
+            <if test="good != null "> and good = #{good}</if>
+            <if test="goodMinus != null "> and good_minus = #{goodMinus}</if>
+            <if test="passPlus != null "> and pass_plus = #{passPlus}</if>
+            <if test="pass != null "> and pass = #{pass}</if>
+            <if test="passMinus != null "> and pass_minus = #{passMinus}</if>
+            <if test="failedPlus != null "> and failed_plus = #{failedPlus}</if>
+            <if test="failed != null "> and failed = #{failed}</if>
+            <if test="failedMinus != null "> and failed_minus = #{failedMinus}</if>
+        </where>
+    </select>
+    
+    <select id="selectCouStrategyByStrategyId" parameterType="Long" resultMap="CouStrategyResult">
+        <include refid="selectCouStrategyVo"/>
+        where strategy_id = #{strategyId}
+    </select>
+        
+    <insert id="insertCouStrategy" parameterType="CouStrategy" useGeneratedKeys="true" keyProperty="strategyId">
+        insert into cou_strategy
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="usualPercent != null">usual_percent,</if>
+            <if test="midPercent != null">mid_percent,</if>
+            <if test="finalPercent != null">final_percent,</if>
+            <if test="otherPercent != null">other_percent,</if>
+            <if test="excellectPlus != null">excellect_plus,</if>
+            <if test="excellent != null">excellent,</if>
+            <if test="excellentMinus != null">excellent_minus,</if>
+            <if test="goodPlus != null">good_plus,</if>
+            <if test="good != null">good,</if>
+            <if test="goodMinus != null">good_minus,</if>
+            <if test="passPlus != null">pass_plus,</if>
+            <if test="pass != null">pass,</if>
+            <if test="passMinus != null">pass_minus,</if>
+            <if test="failedPlus != null">failed_plus,</if>
+            <if test="failed != null">failed,</if>
+            <if test="failedMinus != null">failed_minus,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="usualPercent != null">#{usualPercent},</if>
+            <if test="midPercent != null">#{midPercent},</if>
+            <if test="finalPercent != null">#{finalPercent},</if>
+            <if test="otherPercent != null">#{otherPercent},</if>
+            <if test="excellectPlus != null">#{excellectPlus},</if>
+            <if test="excellent != null">#{excellent},</if>
+            <if test="excellentMinus != null">#{excellentMinus},</if>
+            <if test="goodPlus != null">#{goodPlus},</if>
+            <if test="good != null">#{good},</if>
+            <if test="goodMinus != null">#{goodMinus},</if>
+            <if test="passPlus != null">#{passPlus},</if>
+            <if test="pass != null">#{pass},</if>
+            <if test="passMinus != null">#{passMinus},</if>
+            <if test="failedPlus != null">#{failedPlus},</if>
+            <if test="failed != null">#{failed},</if>
+            <if test="failedMinus != null">#{failedMinus},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCouStrategy" parameterType="CouStrategy">
+        update cou_strategy
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="usualPercent != null">usual_percent = #{usualPercent},</if>
+            <if test="midPercent != null">mid_percent = #{midPercent},</if>
+            <if test="finalPercent != null">final_percent = #{finalPercent},</if>
+            <if test="otherPercent != null">other_percent = #{otherPercent},</if>
+            <if test="excellectPlus != null">excellect_plus = #{excellectPlus},</if>
+            <if test="excellent != null">excellent = #{excellent},</if>
+            <if test="excellentMinus != null">excellent_minus = #{excellentMinus},</if>
+            <if test="goodPlus != null">good_plus = #{goodPlus},</if>
+            <if test="good != null">good = #{good},</if>
+            <if test="goodMinus != null">good_minus = #{goodMinus},</if>
+            <if test="passPlus != null">pass_plus = #{passPlus},</if>
+            <if test="pass != null">pass = #{pass},</if>
+            <if test="passMinus != null">pass_minus = #{passMinus},</if>
+            <if test="failedPlus != null">failed_plus = #{failedPlus},</if>
+            <if test="failed != null">failed = #{failed},</if>
+            <if test="failedMinus != null">failed_minus = #{failedMinus},</if>
+        </trim>
+        where strategy_id = #{strategyId}
+    </update>
+
+    <delete id="deleteCouStrategyByStrategyId" parameterType="Long">
+        delete from cou_strategy where strategy_id = #{strategyId}
+    </delete>
+
+    <delete id="deleteCouStrategyByStrategyIds" parameterType="String">
+        delete from cou_strategy where strategy_id in 
+        <foreach item="strategyId" collection="array" open="(" separator="," close=")">
+            #{strategyId}
+        </foreach>
+    </delete>
+</mapper>

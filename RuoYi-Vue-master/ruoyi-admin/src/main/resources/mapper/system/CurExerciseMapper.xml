@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CurExerciseMapper">
+    
+    <resultMap type="CurExercise" id="CurExerciseResult">
+        <result property="exerciseId"    column="exercise_id"    />
+        <result property="lectureId"    column="lecture_id"    />
+        <result property="type"    column="type"    />
+        <result property="difficulty"    column="difficulty"    />
+        <result property="score"    column="score"    />
+        <result property="content"    column="content"    />
+        <result property="answer"    column="answer"    />
+        <result property="usedTimes"    column="used_times"    />
+    </resultMap>
+
+    <sql id="selectCurExerciseVo">
+        select exercise_id, lecture_id, type, difficulty, score, content, answer, used_times from cur_exercise
+    </sql>
+
+    <select id="selectCurExerciseList" parameterType="CurExercise" resultMap="CurExerciseResult">
+        <include refid="selectCurExerciseVo"/>
+        <where>  
+            <if test="lectureId != null "> and lecture_id = #{lectureId}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="difficulty != null  and difficulty != ''"> and difficulty = #{difficulty}</if>
+            <if test="score != null "> and score = #{score}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="answer != null  and answer != ''"> and answer = #{answer}</if>
+            <if test="usedTimes != null "> and used_times = #{usedTimes}</if>
+        </where>
+    </select>
+    
+    <select id="selectCurExerciseByExerciseId" parameterType="Long" resultMap="CurExerciseResult">
+        <include refid="selectCurExerciseVo"/>
+        where exercise_id = #{exerciseId}
+    </select>
+        
+    <insert id="insertCurExercise" parameterType="CurExercise" useGeneratedKeys="true" keyProperty="exerciseId">
+        insert into cur_exercise
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="lectureId != null">lecture_id,</if>
+            <if test="type != null and type != ''">type,</if>
+            <if test="difficulty != null and difficulty != ''">difficulty,</if>
+            <if test="score != null">score,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="answer != null">answer,</if>
+            <if test="usedTimes != null">used_times,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="lectureId != null">#{lectureId},</if>
+            <if test="type != null and type != ''">#{type},</if>
+            <if test="difficulty != null and difficulty != ''">#{difficulty},</if>
+            <if test="score != null">#{score},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="answer != null">#{answer},</if>
+            <if test="usedTimes != null">#{usedTimes},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCurExercise" parameterType="CurExercise">
+        update cur_exercise
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="lectureId != null">lecture_id = #{lectureId},</if>
+            <if test="type != null and type != ''">type = #{type},</if>
+            <if test="difficulty != null and difficulty != ''">difficulty = #{difficulty},</if>
+            <if test="score != null">score = #{score},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="answer != null">answer = #{answer},</if>
+            <if test="usedTimes != null">used_times = #{usedTimes},</if>
+        </trim>
+        where exercise_id = #{exerciseId}
+    </update>
+
+    <delete id="deleteCurExerciseByExerciseId" parameterType="Long">
+        delete from cur_exercise where exercise_id = #{exerciseId}
+    </delete>
+
+    <delete id="deleteCurExerciseByExerciseIds" parameterType="String">
+        delete from cur_exercise where exercise_id in 
+        <foreach item="exerciseId" collection="array" open="(" separator="," close=")">
+            #{exerciseId}
+        </foreach>
+    </delete>
+</mapper>
